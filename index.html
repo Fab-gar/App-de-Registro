@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Actividad</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7/css/flag-icons.min.css"/>
+    <!-- Enlace al Manifest para PWA -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Pantalla de Carga (Loader) -->
+    <div id="loader-wrapper">
+        <!-- Usamos la imagen como loader -->
+        <img src="logo.png" alt="Cargando..." class="loader-logo">
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" href="#menu">
+                <img src="logo.png" alt="Logo" class="navbar-logo me-2">
+                <span data-i18n="appName"></span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#main"><i class="bi bi-journal-text"></i> <span data-i18n="navRegister"></span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#calendar"><i class="bi bi-calendar-event"></i> <span data-i18n="navCalendar"></span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#people"><i class="bi bi-people-fill"></i> <span data-i18n="navPeople"></span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#texts"><i class="bi bi-bookmark-star-fill"></i> <span data-i18n="navTexts"></span></a>
+                    </li>
+                </ul>
+                <!-- Interruptor de Tema (Modo Oscuro) -->
+                <ul class="navbar-nav ms-lg-3">
+                    <li class="nav-item">
+                        <div class="form-check form-switch theme-switch"><input class="form-check-input" type="checkbox" role="switch" id="theme-toggle"><label class="form-check-label" for="theme-toggle"><i class="bi bi-moon-stars-fill"></i></label></div>
+                    </li>
+                    <!-- Selector de Idioma -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="language-dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-translate"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="language-dropdown">
+                            <li><a class="dropdown-item" href="#" data-lang="es">Español</a></li>
+                            <li><a class="dropdown-item" href="#" data-lang="en">English</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mt-4">
+        <!-- Vista del Menú Principal -->
+        <section id="page-menu" class="page">
+            <div class="main-container">
+                <div class="card">
+                    <h2><i class="bi bi-clock-history"></i> <span data-i18n="menuHours"></span> <strong id="menu-total-hours" class="text-primary">0h 0m</strong></h2>
+                    <p data-i18n="menuHoursDesc"></p>
+                    <div class="buttons">
+                        <a href="#main" class="btn btn-primary" data-i18n="btnRegisterDay"></a>
+                        <a href="#main" id="view-summary-btn" class="btn btn-secondary" data-i18n="btnViewSummary"></a>
+                    </div>
+                </div>
+                <div class="card">
+                    <h2><i class="bi bi-person-lines-fill"></i> <span data-i18n="menuRevisits"></span></h2>
+                    <p data-i18n="menuRevisitsDesc"></p>
+                    <div class="buttons">
+                        <a href="#main" class="btn btn-primary" data-i18n="btnRegister"></a>
+                        <a href="#people" class="btn btn-secondary" data-i18n="btnViewList"></a>
+                    </div>
+                </div>
+                <div class="card">
+                    <h2><i class="bi bi-book-half"></i> <span data-i18n="menuStudies"></span></h2>
+                    <p data-i18n="menuStudiesDesc"></p>
+                    <div class="buttons">
+                        <a href="#main" class="btn btn-primary" data-i18n="btnRegister"></a>
+                        <a href="#people" class="btn btn-secondary" data-i18n="btnViewList"></a>
+                    </div>
+                </div>
+                 <div class="card">
+                    <h2><i class="bi bi-calendar3"></i> <span data-i18n="menuCalendar"></span></h2>
+                    <p data-i18n="menuCalendarDesc"></p>
+                    <div class="buttons">
+                        <a href="#calendar" class="btn btn-primary" data-i18n="btnViewCalendar"></a>
+                    </div>
+                </div>
+                <div class="card">
+                    <h2><i class="bi bi-bookmark-star-fill"></i> <span data-i18n="menuFavTexts"></span></h2>
+                    <p data-i18n="menuFavTextsDesc"></p>
+                    <div class="buttons">
+                        <a href="#texts" class="btn btn-primary" data-i18n="btnAdd"></a>
+                        <a href="#texts" class="btn btn-secondary" data-i18n="btnView"></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Vista de Registro de Actividad (main.html) -->
+        <section id="page-main" class="page">
+            <div class="row">
+                <!-- Columna de Entrada Diaria -->
+                <div class="col-md-6" id="daily-entry-column">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="bi bi-pencil-square"></i> <span data-i18n="formDayEntry"></span></h2>
+                        </div>
+                        <div class="card-body">
+                            <form id="activity-form">
+                                <!-- Diseño de fecha simplificado y funcional -->
+                                <div class="date-selector-container mb-4">
+                                    <label class="form-label d-block text-center"><strong data-i18n="formDate"></strong></label>
+                                    <div class="date-selector-modern" id="date-display-clickable">
+                                        <button class="btn btn-icon" type="button" id="prev-day-btn"><i class="bi bi-chevron-left"></i></button>
+                                        <div class="date-display-modern">
+                                            <span class="day" id="date-day"></span>
+                                            <span class="month" id="date-month"></span>
+                                            <span class="year" id="date-year"></span>
+                                        </div>
+                                        <button class="btn btn-icon" type="button" id="next-day-btn"><i class="bi bi-chevron-right"></i></button>
+                                    </div>
+                                    <input type="date" id="current-date-input" class="visually-hidden">
+                                </div>
+
+                                <!-- Nuevo diseño de controles -->
+                                <div class="entry-controls">
+                                    <div class="control-card">
+                                        <label><i class="bi bi-stopwatch"></i> <span data-i18n="formTime"></span></label>
+                                        <div class="control-value">
+                                            <button type="button" class="btn-step" data-step-action="minus" data-step-target="minutes">-</button>
+                                            <input type="number" id="hours" value="0" min="0" readonly><span>h</span>
+                                            <input type="number" id="minutes" value="0" min="0" max="59" readonly><span>m</span>
+                                            <button type="button" class="btn-step" data-step-action="plus" data-step-target="minutes">+</button>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-center gap-2 my-2" id="time-add-buttons">
+                                    <button type="button" class="btn btn-sm btn-outline-info" data-add-minutes="15">+15m</button>
+                                    <button type="button" class="btn btn-sm btn-outline-info" data-add-minutes="30">+30m</button>
+                                    <button type="button" class="btn btn-sm btn-outline-info" data-add-minutes="60">+1h</button>
+                                </div>
+                                    <div class="control-card">
+                                        <label><i class="bi bi-person-check"></i> <span data-i18n="formRevisits"></span></label>
+                                        <div class="control-value">
+                                            <button type="button" class="btn-step" data-step-action="minus" data-step-target="revisits">-</button>
+                                            <input type="number" id="revisits" value="0" min="0" readonly>
+                                            <button type="button" class="btn-step" data-step-action="plus" data-step-target="revisits">+</button>
+                                        </div>
+                                    </div>
+                                    <div class="control-card">
+                                        <label><i class="bi bi-book"></i> <span data-i18n="formStudies"></span></label>
+                                        <div class="control-value">
+                                            <button type="button" class="btn-step" data-step-action="minus" data-step-target="studies">-</button>
+                                            <input type="number" id="studies" value="0" min="0" readonly>
+                                            <button type="button" class="btn-step" data-step-action="plus" data-step-target="studies">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-success w-100"><i class="bi bi-check-circle"></i> <span data-i18n="btnSaveDay"></span></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columna de Resumen y Metas -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="bi bi-bar-chart-line-fill"></i> <span data-i18n="summaryTitle"></span></h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="goal-select" class="form-label"><strong data-i18n="summaryGoal"></strong></label>
+                                <select id="goal-select" class="form-select">
+                                    <option value="0" data-i18n="goalNone">Sin meta</option>
+                                    <option value="15" data-i18n="goalHours" data-i18n-vars='{"count": 15}'></option>
+                                    <option value="30" data-i18n="goalHours" data-i18n-vars='{"count": 30}'></option>
+                                    <option value="50" data-i18n="goalHours" data-i18n-vars='{"count": 50}'></option>
+                                    <option value="60" data-i18n="goalHours" data-i18n-vars='{"count": 60}'></option>
+                                </select>
+                            </div>
+                            <div class="progress mb-3" style="height: 25px;">
+                                <div id="goal-progress-bar" class="progress-bar bg-success" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                            </div>
+                            <hr>
+                            <div id="monthly-summary" class="summary-stats">
+                                <p><strong data-i18n="summaryTotalHours"></strong> <span id="total-hours">0</span></p>
+                                <p><strong data-i18n="summaryTotalRevisits"></strong> <span id="total-revisits">0</span></p>
+                                <p><strong data-i18n="summaryTotalStudies"></strong> <span id="total-studies">0</span></p>
+                            </div>
+                            <hr>
+                            <button id="send-report-btn" class="btn btn-primary w-100 mt-3"><i class="bi bi-send-fill"></i> <span data-i18n="btnSendReport"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h3><i class="bi bi-archive-fill"></i> <span data-i18n="savedEntriesTitle"></span></h3>
+                </div>
+                <div class="card-body">
+                    <ul id="daily-entries" class="list-group"></ul>
+                    <button id="clear-data" class="btn btn-danger w-100 mt-3"><i class="bi bi-trash3-fill"></i> <span data-i18n="btnClearAll"></span></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Vista del Calendario (calendar.html) -->
+        <section id="page-calendar" class="page">
+             <div class="card">
+                <h2><i class="bi bi-calendar3"></i> <span data-i18n="calendarTitle"></span></h2>
+                <p data-i18n="calendarDesc"></p>
+                <div id="calendar"></div>
+            </div>
+        </section>
+
+        <!-- Vista de la Lista de Personas -->
+        <section id="page-people" class="page">
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="bi bi-people-fill"></i> <span data-i18n="peopleListTitle"></span></h2>
+                </div>
+                <div class="card-body">
+                    <ul id="people-list" class="list-group"></ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Vista de Textos Favoritos -->
+        <section id="page-texts" class="page">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h2><i class="bi bi-bookmark-star-fill"></i> <span data-i18n="favTextsTitle"></span></h2>
+                    <button id="add-text-btn" class="btn btn-primary"><i class="bi bi-plus-circle"></i> <span data-i18n="btnAdd"></span></button>
+                </div>
+                <div class="card-body">
+                    <ul id="favorite-texts-list" class="list-group"></ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal para agregar detalles de Persona (Revisita/Estudio) -->
+        <div class="modal fade" id="person-details-modal" tabindex="-1" aria-labelledby="personModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="personModalLabel" data-i18n="modalAddPersonTitle"></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="person-details-form">
+                            <!-- Campo oculto para saber si es revisita o estudio -->
+                            <input type="hidden" id="person-type">
+                            <input type="hidden" id="person-id">
+                            <div class="mb-3">
+                                <label for="person-name" class="form-label" data-i18n="modalFieldName"></label>
+                                <input type="text" class="form-control" id="person-name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="person-notes" class="form-label" data-i18n="modalFieldNotes"></label>
+                                <textarea class="form-control" id="person-notes" rows="3"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="btnCancel"></button>
+                        <button type="button" class="btn btn-primary" id="save-person-details-btn" data-i18n="btnSaveAndCount"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal para ELIMINAR detalles de Persona -->
+        <div class="modal fade" id="delete-person-modal" tabindex="-1" aria-labelledby="deletePersonModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deletePersonModalLabel" data-i18n="modalDeletePersonTitle"></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p data-i18n="modalDeletePersonDesc"></p>
+                        <div id="delete-person-list" class="list-group">
+                            <!-- La lista de personas a eliminar se generará aquí -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal para agregar/editar Textos Favoritos -->
+        <div class="modal fade" id="text-modal" tabindex="-1" aria-labelledby="textModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="textModalLabel" data-i18n="modalAddTextTitle"></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="text-form">
+                            <input type="hidden" id="text-id">
+                            <div class="mb-3">
+                                <label for="text-reference" class="form-label" data-i18n="modalTextRef"></label>
+                                <input type="text" class="form-control" id="text-reference" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="text-description" class="form-label" data-i18n="modalTextDesc"></label>
+                                <textarea class="form-control" id="text-description" rows="4"></textarea>
+                            </div>
+                            <div class="modal-footer pb-0">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="btnCancel"></button>
+                                <button type="submit" class="btn btn-primary" data-i18n="btnSaveText"></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal para Alertas y Confirmaciones Personalizadas -->
+        <div class="modal fade" id="custom-alert-modal" tabindex="-1" aria-labelledby="customAlertModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="customAlertModalLabel"></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="custom-alert-modal-body">
+                        <!-- El mensaje se inyectará aquí -->
+                    </div>
+                    <div class="modal-footer" id="custom-alert-modal-footer">
+                        <!-- Los botones se inyectarán aquí -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Contenedor para las notificaciones Toast -->
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100">
+        <!-- Las notificaciones aparecerán aquí -->
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Cambiamos a type="module" para usar import/export y mejorar la modularidad -->
+    <script type="module" src="storage.js"></script>
+    <script type="module" src="languages.js"></script>
+    <script type="module" src="i18n.js"></script>
+    <script type="module" src="customAlert.js"></script>
+    <script type="module" src="router.js"></script>
+    <script type="module" src="script.js"></script>
+    <script type="module" src="calendar.js"></script>
+    <script type="module" src="people.js"></script>
+    <script type="module" src="texts.js"></script>
+</body> 
+</html>

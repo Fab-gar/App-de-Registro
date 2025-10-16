@@ -1,0 +1,628 @@
+:root {
+    --bg-color: #eef2f5;
+    --text-color: #333;
+    --text-muted-color: #666;
+    --primary-color: #4a90e2;
+    --card-bg-color: #eef2f5;
+    --card-shadow-light: #ffffff;
+    --card-shadow-dark: #c1c9d2;
+    --inset-shadow-light: #ffffff;
+    --inset-shadow-dark: #c1c9d2;
+    --control-card-bg: #e6eaf0;
+    --entry-has-bg: #fff3cd;
+    --entry-has-text: #664d03;
+    --border-color: #dee2e6;
+}
+
+body.dark-mode {
+    --bg-color: #2c3038;
+    --text-color: #f0f2f5; /* Aumentamos el brillo para máxima legibilidad */
+    --text-muted-color: #c8c8c8; /* Aún más claro para mejorar el contraste */
+    --primary-color: #58a6ff;
+    --card-bg-color: #353941;
+    --card-shadow-light: #424750;
+    --card-shadow-dark: #202329;
+    --inset-shadow-light: #4a505a; /* Sombra interior más clara */
+    --inset-shadow-dark: #202329;
+    --control-card-bg: #2c3038;
+    --entry-has-bg: #493e1b;
+    --entry-has-text: #ffda6a;
+    --border-color: #4b515c;
+    --calendar-other-month-text: #6a707c; /* Color para días de otros meses */
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    transition: background-color 0.3s ease;
+    /* Eliminamos el centrado para permitir un layout de página completa */
+}
+
+/* Hacemos que el contenedor principal sea el marco de referencia para las páginas */
+main.container {
+    position: relative;
+}
+
+/* Estilos base para todas las páginas (secciones) */
+.page {
+    position: absolute; /* Permite que las páginas se superpongan durante la transición */
+    width: 100%;
+    left: 0;
+    opacity: 0; /* Ocultas por defecto */
+    transform: translateX(15px); /* Ligeramente desplazadas a la derecha */
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; /* La magia de la animación */
+    pointer-events: none; /* Evita interactuar con páginas ocultas */
+}
+
+/* Clase para la página activa/visible */
+.page-active {
+    opacity: 1; /* Totalmente visible */
+    transform: translateX(0); /* En su posición original */
+    pointer-events: auto; /* Se puede interactuar con ella */
+    position: relative; /* Hace que la página activa ocupe su espacio y el contenedor se ajuste */
+}
+
+.main-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    padding: 30px;
+    max-width: 800px;
+    width: 100%;
+}
+
+.card {
+    background-color: var(--card-bg-color);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 10px 10px 20px var(--card-shadow-dark), -10px -10px 20px var(--card-shadow-light);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 12px 12px 25px var(--card-shadow-dark), -12px -12px 25px var(--card-shadow-light);
+}
+
+h2 {
+    font-size: 1.8rem;
+    color: var(--text-color);
+    margin-top: 0;
+}
+
+p {
+    color: var(--text-muted-color);
+    font-size: 1rem;
+    margin-bottom: 25px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.btn {
+    text-decoration: none;
+    padding: 12px 25px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    box-shadow: 5px 5px 10px var(--card-shadow-dark), -5px -5px 10px var(--card-shadow-light);
+}
+
+.btn-primary:hover {
+    background-color: color-mix(in srgb, var(--primary-color) 80%, black);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+}
+
+.btn-secondary:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .main-container {
+        grid-template-columns: 1fr;
+        padding: 15px;
+        gap: 20px;
+    }
+
+    .card {
+        padding: 20px;
+        box-shadow: 8px 8px 15px var(--card-shadow-dark), -8px -8px 15px var(--card-shadow-light);
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    p {
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+    }
+
+    .calendar-table td {
+        padding: 8px 2px;
+    }
+}
+
+/* --- Estilos de la Barra de Navegación Personalizada --- */
+.navbar-custom {
+    background-color: var(--card-bg-color);
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    box-shadow: 8px 8px 15px var(--card-shadow-dark), -8px -8px 15px var(--card-shadow-light);
+}
+
+.navbar-custom .navbar-brand {
+    color: var(--text-color);
+    font-weight: 700;
+}
+
+.navbar-custom .nav-link {
+    color: var(--primary-color);
+    font-weight: 600;
+    padding: 8px 15px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.navbar-custom .nav-link:hover, .navbar-custom .nav-link.active {
+    box-shadow: inset 5px 5px 10px var(--inset-shadow-dark), inset -5px -5px 10px var(--inset-shadow-light);
+}
+
+/* Estilos para el botón hamburguesa del navbar */
+.navbar-toggler {
+    border: none;
+    box-shadow: 5px 5px 10px var(--card-shadow-dark), -5px -5px 10px var(--card-shadow-light);
+}
+
+.navbar-toggler:focus {
+    box-shadow: inset 5px 5px 10px #c1c9d2, inset -5px -5px 10px #ffffff;
+}
+
+.navbar-custom .navbar-collapse {
+    background-color: var(--card-bg-color);
+    padding: 1rem;
+}
+
+.navbar-logo {
+    height: 40px; /* Ajusta la altura del logo en la barra de navegación */
+}
+
+/* --- Estilos del Calendario --- */
+.calendar-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 4px; /* Espacio entre celdas */
+}
+
+.calendar-table th {
+    font-weight: 600;
+    padding-bottom: 12px;
+    font-size: 0.9em;
+    color: var(--text-muted-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.calendar-table td {
+    padding: 12px 5px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s ease-in-out;
+    border: 1px solid transparent; /* Borde invisible para evitar saltos en hover */
+}
+
+.calendar-table td:not(.other-month):hover {
+    background-color: var(--control-card-bg);
+    transform: scale(1.05);
+    border-color: var(--border-color);
+}
+
+.calendar-table td.today {
+    font-weight: bold;
+    box-shadow: inset 0 0 0 2px var(--primary-color);
+}
+
+.calendar-table td.has-entry {
+    background-color: var(--entry-has-bg);
+    font-weight: bold;
+    color: var(--entry-has-text);
+}
+
+.calendar-table td.other-month {
+    color: var(--calendar-other-month-text);
+    opacity: 0.35; /* Hacemos los días de otros meses más tenues */
+    cursor: default;
+}
+
+/* --- Estilos del Loader --- */
+#loader-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Asegura que esté por encima de todo */
+    transition: opacity 0.5s ease-out; /* Animación de desvanecimiento */
+}
+
+.loader-logo {
+    width: 150px; /* Ajusta el tamaño del logo en la pantalla de carga */
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.7;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0.7;
+    }
+}
+
+/* Espaciado para iconos */
+.bi {
+    margin-right: 0.5rem;
+}
+
+/* Quitamos el margen para los iconos que están solos dentro de un botón */
+.btn .bi {
+    margin-right: 0;
+}
+
+/* --- Estilos para la lista de personas expandible --- */
+.person-item-header {
+    cursor: pointer;
+}
+
+.person-item-header .bi-chevron-down {
+    transition: transform 0.35s ease;
+}
+
+.person-item-header[aria-expanded="true"] .bi-chevron-down {
+    transform: rotate(180deg);
+}
+
+/* Estilos para el cuerpo colapsable de la lista de personas */
+.person-details-body {
+    padding-top: 10px;
+    border-top: 1px solid var(--border-color);
+    margin-top: 10px;
+}
+
+/* --- Estilos para el resumen mensual --- */
+.summary-stats p {
+    font-size: 1.2rem; /* Aumentamos el tamaño de la fuente */
+    margin-bottom: 0.75rem; /* Ajustamos el margen inferior */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.summary-stats p span {
+    font-weight: 700; /* Hacemos el número más grueso */
+    color: var(--primary-color);
+    font-size: 1.4rem; /* Hacemos el número un poco más grande que el texto */
+    padding: 2px 8px;
+}
+
+/* Ajuste para que la página del calendario no genere scroll innecesario */
+#page-calendar .card {
+    margin-bottom: 2rem; /* Añade un poco de espacio al final */
+}
+
+/* --- Nuevos estilos para la entrada de datos --- */
+.entry-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.control-card {
+    background-color: var(--control-card-bg);
+    border-radius: 15px;
+    padding: 1rem;
+    text-align: center;
+    box-shadow: inset 4px 4px 8px var(--inset-shadow-dark), inset -4px -4px 8px var(--inset-shadow-light);
+}
+
+.control-card label {
+    font-weight: 600;
+    color: var(--text-muted-color);
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.control-value {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.control-value input[type="number"] {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    border: none;
+    background: transparent;
+    text-align: center;
+    width: 4rem;
+    -moz-appearance: textfield; /* Ocultar flechas en Firefox */
+}
+
+.control-value input::-webkit-outer-spin-button,
+.control-value input::-webkit-inner-spin-button {
+    -webkit-appearance: none; /* Ocultar flechas en Chrome, Safari, Edge */
+    margin: 0;
+}
+
+.control-value span {
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: var(--text-muted-color);
+}
+
+.btn-step {
+    font-size: 2rem;
+    font-weight: 300;
+    color: var(--primary-color);
+    background: transparent;
+    border: none;
+    padding: 0 1rem;
+    cursor: pointer;
+}
+
+/* --- Estilos para el nuevo selector de fecha --- */
+.date-selector-container .form-label {
+    font-weight: 600;
+    color: var(--text-muted-color);
+}
+
+.date-selector {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--control-card-bg);
+    border-radius: 15px;
+    padding: 0.5rem;
+    box-shadow: inset 4px 4px 8px var(--inset-shadow-dark), inset -4px -4px 8px var(--inset-shadow-light);
+}
+
+.date-selector .btn {
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+.date-display {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+}
+
+.date-display .day {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    line-height: 1;
+}
+
+.date-display .month-year {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    line-height: 1.1;
+    color: var(--text-color);
+}
+
+/* Hacemos el input de fecha invisible pero funcional, superponiéndolo */
+.date-selector-container {
+    position: relative;
+}
+.date-selector-container input[type="date"] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* --- Estilos para el selector de fecha electrónico --- */
+.date-selector-modern {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--control-card-bg);
+    border-radius: 15px;
+    padding: 0.5rem;
+    box-shadow: inset 4px 4px 8px var(--inset-shadow-dark), inset -4px -4px 8px var(--inset-shadow-light);
+    cursor: pointer;
+    position: relative;
+}
+
+.date-selector-modern .btn-icon {
+    background: transparent;
+    border: none;
+    color: var(--primary-color);
+    font-size: 1.8rem;
+    padding: 0 0.5rem;
+}
+
+.date-display-modern {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background-color: var(--bg-color);
+    border-radius: 10px;
+    box-shadow: 4px 4px 8px var(--inset-shadow-dark), -4px -4px 8px var(--inset-shadow-light);
+    color: var(--text-color);
+    text-align: center;
+}
+
+.date-display-modern .day {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    line-height: 1;
+}
+
+.date-display-modern .month {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.date-display-modern .year {
+    font-size: 1rem;
+    font-weight: 300;
+    color: var(--text-muted-color);
+}
+
+/* --- Estilos para el interruptor de tema --- */
+.theme-switch {
+    display: flex;
+    align-items: center;
+}
+
+.theme-switch .form-check-input {
+    width: 2.5em;
+    height: 1.25em;
+    cursor: pointer;
+    background-color: var(--control-card-bg);
+    border-color: var(--border-color);
+    box-shadow: inset 4px 4px 8px var(--inset-shadow-dark), inset -4px -4px 8px var(--inset-shadow-light);
+}
+
+.theme-switch .form-check-label {
+    cursor: pointer;
+    color: var(--primary-color);
+}
+
+/* --- Ajustes adicionales para modo oscuro --- */
+body.dark-mode .modal-content, body.dark-mode .list-group-item {
+    background-color: var(--card-bg-color);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+body.dark-mode .card-header {
+    color: var(--text-color);
+    border-bottom-color: var(--border-color);
+}
+
+body.dark-mode .modal-header, body.dark-mode .modal-footer {
+    border-bottom-color: var(--border-color);
+    border-top-color: var(--border-color);
+}
+
+body.dark-mode .form-control, body.dark-mode .form-select {
+    background-color: var(--control-card-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
+    box-shadow: inset 2px 2px 4px var(--inset-shadow-dark), inset -2px -2px 4px var(--inset-shadow-light);
+}
+
+body.dark-mode .form-control:focus, body.dark-mode .form-select:focus {
+    background-color: var(--control-card-bg);
+    color: var(--text-color);
+    border-color: var(--primary-color);
+    box-shadow: inset 2px 2px 4px var(--inset-shadow-dark), inset -2px -2px 4px var(--inset-shadow-light), 0 0 0 0.25rem rgba(var(--primary-color), 0.25);
+}
+
+body.dark-mode .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* --- Estilos para botones de acción modernos (Editar/Eliminar) --- */
+.action-buttons {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end; /* Alinea los botones a la derecha */
+}
+
+.btn-action {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; /* Botones circulares */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    color: var(--primary-color);
+    background-color: var(--control-card-bg);
+    border: none;
+    box-shadow: 4px 4px 8px var(--inset-shadow-dark), -4px -4px 8px var(--inset-shadow-light);
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-action:active {
+    box-shadow: inset 4px 4px 8px var(--inset-shadow-dark), inset -4px -4px 8px var(--inset-shadow-light);
+    transform: scale(0.95);
+}
+
+.btn-action.btn-action-danger {
+    color: #e53e3e; /* Un color rojo para la acción de eliminar */
+}
+
+/* --- Estilos para el menú desplegable de idioma --- */
+.navbar-custom .dropdown-menu {
+    background-color: var(--card-bg-color);
+    border-radius: 15px;
+    border: none;
+    box-shadow: 8px 8px 15px var(--card-shadow-dark), -8px -8px 15px var(--card-shadow-light);
+    padding: 0.5rem;
+    margin-top: 1rem !important;
+}
+
+.navbar-custom .dropdown-item {
+    color: var(--text-color);
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    border-radius: 10px;
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-custom .dropdown-item:active, .navbar-custom .dropdown-item:hover {
+    background-color: transparent;
+    color: var(--primary-color);
+    box-shadow: inset 4px 4px 8px var(--inset-shadow-dark), inset -4px -4px 8px var(--inset-shadow-light);
+}
