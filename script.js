@@ -42,6 +42,7 @@ export function initializeMainPage(showForm = true) {
     const minutesInput = document.getElementById('minutes');
     const revisitsInput = document.getElementById('revisits');
     const studiesInput = document.getElementById('studies');
+
     const prevDayBtn = document.getElementById('prev-day-btn');
     const nextDayBtn = document.getElementById('next-day-btn');
     const dailyEntriesList = document.getElementById('daily-entries');
@@ -49,6 +50,7 @@ export function initializeMainPage(showForm = true) {
     const totalHoursSpan = document.getElementById('total-hours');
     const totalRevisitsSpan = document.getElementById('total-revisits');
     const totalStudiesSpan = document.getElementById('total-studies');
+
     const goalSelect = document.getElementById('goal-select');
     const goalProgressBar = document.getElementById('goal-progress-bar');
     const personModalElement = document.getElementById('person-details-modal');
@@ -105,7 +107,7 @@ export function initializeMainPage(showForm = true) {
             listItem.innerHTML = `
                 <span>${new Date(entry.date + 'T00:00:00').toLocaleDateString(getLanguage(), { day: '2-digit', month: 'long' })}</span>
                 <div>
-                    <span class="badge bg-primary rounded-pill">${formatTime(entryMinutes)}</span>
+                    <span class="badge bg-primary rounded-pill" title="Tiempo">${formatTime(entryMinutes)}</span>
                     <span class="badge bg-info rounded-pill">R: ${entry.revisits}</span>
                     <span class="badge bg-success rounded-pill">E: ${entry.studies}</span>
                 </div>
@@ -202,7 +204,7 @@ export function initializeMainPage(showForm = true) {
                 totalMinutes += (action === 'plus' ? 5 : -5);
                 if (totalMinutes < 0) totalMinutes = 0;
                 hoursInput.value = Math.floor(totalMinutes / 60);
-                minutesInput.value = totalMinutes % 60;
+                minutesInput.value = totalMinutes % 60;            
             } else if (targetId === 'revisits' || targetId === 'studies') {
                 const targetInput = document.getElementById(targetId);
                 let currentValue = parseInt(targetInput.value, 10) || 0;
@@ -228,26 +230,30 @@ export function initializeMainPage(showForm = true) {
         });
 
         // Modal save button
-        savePersonBtn.addEventListener('click', () => {
+        personDetailsForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // Prevenimos el envío tradicional del formulario
             const type = document.getElementById('person-type').value;
             const name = document.getElementById('person-name').value;
-            if (!name) {
-                showAlert(t('alertNameRequired'), t('alertAttention'));
-                return;
-            }
+            const notes = document.getElementById('person-notes').value.trim();
+
+            // 1. Incrementar siempre el contador en la pantalla principal
             const targetInput = document.getElementById(type);
             targetInput.value = (parseInt(targetInput.value, 10) || 0) + 1;
 
-            const newPerson = {
-                id: Date.now(),
-                name: name,
-                notes: document.getElementById('person-notes').value,
-                date: dateInput.value,
-                type: type
-            };
-            const people = loadPeople();
-            people.push(newPerson);
-            savePeople(people);
+            // 2. Solo guardar los detalles si se ha introducido un nombre o una nota
+            if (name || notes) {
+                const newPerson = {
+                    id: Date.now(),
+                    name: name,
+                    notes: notes,
+                    date: dateInput.value,
+                    type: type
+                };
+                const people = loadPeople();
+                people.push(newPerson);
+                savePeople(people);
+            }
+
             personModal.hide();
         });
 
@@ -326,3 +332,16 @@ export function initializeMainPage(showForm = true) {
     goalSelect.value = loadGoal();
     updateUI();
 }
+
+// Oculta el loader si sigue visible cuando la página termina de cargar
+window.addEventListener('load', () => {
+    const loader = document.getElementById('loader-wrapper');
+    if (loader) {
+        // Aplicamos un desvanecimiento suave y luego lo quitamos del flujo
+        loader.style.transition = 'opacity 0.5s ease-out';
+        loader.style.opacity = '0';
+        setTimeout(() => {
+            if (loader.parentNode) loader.parentNode.removeChild(loader);
+        }, 600);
+    }
+});

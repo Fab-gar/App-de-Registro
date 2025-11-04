@@ -21,6 +21,9 @@
     "menuFavTextsDesc": "Guarda y organiza tus textos bíblicos.",
     "btnAdd": "Agregar",
     "btnView": "Ver",
+    "menuNotes": "Notas",
+    "menuNotesDesc": "Crea y gestiona tus notas personales.",
+    "notesTitle": "Notas",
     "formDayEntry": "Entrada del Día",
     "formDate": "Fecha de Registro",
     "formTime": "Tiempo",
@@ -75,5 +78,14 @@
     "editText": "Editar Texto Favorito",
     "confirmDeleteText": "¿Estás seguro de que quieres eliminar \"{ref}\"?",
     "addRevisit": "Agregar Revisita",
-    "addStudy": "Agregar Estudio"
+    "addStudy": "Agregar Estudio",
+    "noteContentLabel": "Contenido de la Nota",
+    "btnSaveNote": "Guardar Nota",
+    "savedNotesTitle": "Notas Guardadas",
+    "notesEmpty": "Aún no has guardado ninguna nota.",
+    "noteSavedToast": "¡Nota guardada con éxito!",
+    "confirmDeleteNote": "¿Estás seguro de que quieres eliminar esta nota?",
+    "notePlaceholder": "Escribe tu nota aquí...",
+    "footerAllRightsReserved": "Todos los derechos reservados.",
+    "footerVersion": "Versión: {version}"
 }

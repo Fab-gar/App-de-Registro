@@ -2,6 +2,8 @@ import { initializeMainPage, updateMenuSummary } from './script.js';
 import { initializeCalendar } from './calendar.js';
 import { initializePeoplePage } from './people.js';
 import { initializeTextsPage } from './texts.js';
+import { initializeNotesPage } from './notes.js';
+import { initializeChartsPage } from './charts.js';
 import { setLanguage, getLanguage, translatePage } from './i18n.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -53,6 +55,16 @@ document.addEventListener('DOMContentLoaded', () => {
             // Si estamos mostrando la página de textos, la inicializamos
             if (pageId === 'page-texts') {
                 initializeTextsPage();
+            }
+
+            // Si estamos mostrando la página de notas, la inicializamos
+            if (pageId === 'page-notes') {
+                initializeNotesPage();
+            }
+
+            // Si estamos mostrando la página de gráficos, la inicializamos
+            if (pageId === 'page-charts') {
+                initializeChartsPage();
             }
         } else {
             // Si la página no existe, muestra el menú por defecto

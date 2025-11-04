@@ -3,6 +3,7 @@
     --text-color: #333;
     --text-muted-color: #666;
     --primary-color: #4a90e2;
+    --footer-height: 80px; /* altura por defecto del footer */
     --card-bg-color: #eef2f5;
     --card-shadow-light: #ffffff;
     --card-shadow-dark: #c1c9d2;
@@ -35,12 +36,18 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: var(--bg-color);
     transition: background-color 0.3s ease;
-    /* Eliminamos el centrado para permitir un layout de página completa */
+    min-height: 100vh; /* Asegura que el body ocupe al menos toda la altura de la pantalla */
+    display: flex;
+    flex-direction: column;
+    padding-bottom: var(--footer-height); /* Reservamos espacio para el footer fijo */
 }
 
 /* Hacemos que el contenedor principal sea el marco de referencia para las páginas */
 main.container {
     position: relative;
+    flex-grow: 1; /* Hace que el main ocupe el espacio disponible en el body */
+    display: flex;
+    flex-direction: column;
 }
 
 /* Estilos base para todas las páginas (secciones) */
@@ -65,10 +72,13 @@ main.container {
 .main-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 30px;
-    padding: 30px;
+    gap: 1.5rem; /* Usamos rem para mejor escalabilidad */
+    padding: 1.5rem;
     max-width: 800px;
     width: 100%;
+    margin: 0 auto; /* Centramos el contenedor */
+    min-height: calc(100vh - 100px); /* Altura mínima para ocupar la pantalla menos el navbar (aprox) */
+    align-content: center; /* Centra las tarjetas verticalmente en el grid */
 }
 
 .card {
@@ -119,7 +129,7 @@ p {
 }
 
 .btn-primary:hover {
-    background-color: color-mix(in srgb, var(--primary-color) 80%, black);
+    background-color: #3a7bc8; /* Un tono ligeramente más oscuro de --primary-color */
 }
 
 .btn-secondary {
@@ -162,6 +172,7 @@ p {
     .calendar-table td {
         padding: 8px 2px;
     }
+
 }
 
 /* --- Estilos de la Barra de Navegación Personalizada --- */
@@ -336,8 +347,11 @@ p {
     padding: 2px 8px;
 }
 
-/* Ajuste para que la página del calendario no genere scroll innecesario */
-#page-calendar .card {
+/* Ajuste para que las páginas con contenido principal en una tarjeta no generen scroll innecesario */
+/* y el último elemento sea visible cómodamente. */
+#page-calendar .card,
+#page-people .card,
+#page-texts .card {
     margin-bottom: 2rem; /* Añade un poco de espacio al final */
 }
 
@@ -625,4 +639,52 @@ body.dark-mode .btn-close {
     background-color: transparent;
     color: var(--primary-color);
     box-shadow: inset 4px 4px 8px var(--inset-shadow-dark), inset -4px -4px 8px var(--inset-shadow-light);
+}
+
+/* --- Estilos para el Botón de Acción Flotante (FAB) --- */
+.btn-fab {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), 8px 8px 15px var(--card-shadow-dark), -8px -8px 15px var(--card-shadow-light);
+    transition: all 0.3s ease;
+    z-index: 1050; /* Por encima del contenido, pero debajo de los modales */
+}
+
+.btn-fab:hover {
+    transform: scale(1.05);
+    background-color: #3a7bc8; /* Un tono ligeramente más oscuro de --primary-color */
+}
+
+/* --- Estilos para el Pie de Página (Footer) --- */
+.app-footer {
+    background-color: var(--card-bg-color);
+    color: var(--text-muted-color);
+    text-align: center;
+    padding: 1.25rem 1rem;    
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05); /* Sombra sutil en la parte superior */    
+    position: fixed; /* Fija el footer al fondo de la ventana */
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: var(--footer-height);
+    box-sizing: border-box;
+    z-index: 1020; /* Debajo de modales (Bootstrap usa 1050+) */
+    border-top: 1px solid var(--border-color);
+    font-size: 0.85rem;
+}
+
+.app-footer p {
+    margin-bottom: 0.5rem;
+    color: var(--text-muted-color); /* Aseguramos el color correcto */
 }
