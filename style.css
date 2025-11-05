@@ -39,7 +39,11 @@ body {
     min-height: 100vh; /* Asegura que el body ocupe al menos toda la altura de la pantalla */
     display: flex;
     flex-direction: column;
-    padding-bottom: var(--footer-height); /* Reservamos espacio para el footer fijo */
+}
+
+/* Solo aplicamos el padding para el footer cuando este es visible */
+body.footer-visible {
+    padding-bottom: var(--footer-height);
 }
 
 /* Hacemos que el contenedor principal sea el marco de referencia para las páginas */
@@ -671,17 +675,18 @@ body.dark-mode .btn-close {
     background-color: var(--card-bg-color);
     color: var(--text-muted-color);
     text-align: center;
-    padding: 1.25rem 1rem;    
+    padding: 1.25rem 1rem;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05); /* Sombra sutil en la parte superior */    
-    position: fixed; /* Fija el footer al fondo de la ventana */
+    position: fixed; /* Fija el footer al fondo de la ventana del navegador */
     bottom: 0;
     left: 0;
     width: 100%;
     height: var(--footer-height);
     box-sizing: border-box;
-    z-index: 1020; /* Debajo de modales (Bootstrap usa 1050+) */
+    z-index: 1020; /* Debajo de modales pero por encima del contenido normal */
     border-top: 1px solid var(--border-color);
     font-size: 0.85rem;
+    display: none; /* Oculto por defecto, el router lo mostrará */
 }
 
 .app-footer p {

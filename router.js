@@ -21,6 +21,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Inicializar el sistema de traducción ANTES de mostrar cualquier página
     setLanguage(getLanguage());
 
+    // Referencia al footer
+    const footer = document.querySelector('.app-footer');
+    const body = document.body;
+
     function showPage(pageId) {
         // Oculta todas las páginas quitando la clase activa
         pages.forEach(page => {
@@ -32,9 +36,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (pageToShow) {
             pageToShow.classList.add('page-active');
 
-            // Si estamos mostrando el menú, actualizamos su resumen
+            // Si estamos mostrando el menú, actualizamos su resumen y mostramos el footer
             if (pageId === 'page-menu') {
                 updateMenuSummary();
+                if (footer) {
+                    footer.style.display = 'block';
+                    body.classList.add('footer-visible');
+                }
             }
 
             // Si estamos mostrando la página de registro, la (re)inicializamos
@@ -65,6 +73,12 @@ document.addEventListener('DOMContentLoaded', () => {
             // Si estamos mostrando la página de gráficos, la inicializamos
             if (pageId === 'page-charts') {
                 initializeChartsPage();
+            }
+
+            // Ocultamos el footer en cualquier otra página que no sea el menú
+            if (pageId !== 'page-menu' && footer) {
+                footer.style.display = 'none';
+                body.classList.remove('footer-visible');
             }
         } else {
             // Si la página no existe, muestra el menú por defecto
@@ -128,7 +142,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeToggle = document.getElementById('theme-toggle');
     const loaderLogo = document.querySelector('.loader-logo');
     const navbarLogo = document.querySelector('.navbar-logo');
-    const body = document.body;
 
     // Función para aplicar el tema
     const applyTheme = (theme) => {
@@ -159,6 +172,9 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('theme', newTheme);
         applyTheme(newTheme);
     });
+    
+    // Observador para redibujar los gráficos cuando cambia el tema
+    new MutationObserver(() => initializeChartsPage()).observe(body, { attributes: true, attributeFilter: ['class'] });
 
     // --- LÓGICA DEL CAMBIO DE IDIOMA ---
     document.querySelector('.dropdown-menu').addEventListener('click', (e) => {
